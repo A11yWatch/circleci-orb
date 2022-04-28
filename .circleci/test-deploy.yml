@@ -1,0 +1,49 @@
+version: 2.1
+orbs:
+  a11ywatch: a11ywatch/a11ywatch@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.1
+
+filters: &filters
+  tags:
+    only: /.*/
+
+jobs:
+  command-tests:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: Install Rust and Docker
+          command: |
+            curl https://sh.rustup.rs -sSf | sh -s -- -y
+            curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Install A11yWatch and Start
+          command: |
+            cargo install a11ywatch_cli
+            a11ywatch start
+      - a11ywatch/scan
+workflows:
+  test-deploy:
+    jobs:
+      - command-tests:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: a11ywatch/a11ywatch
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - command-tests
+          context: <publishing-context>
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
