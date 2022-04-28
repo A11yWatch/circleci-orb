@@ -1,0 +1,39 @@
+description: >
+  Scan website for WCAG issues using the A11yWatch suite and other insights relating to inclusion.
+executor: default
+parameters:
+  to:
+    type: string
+    default: "https://a11ywatch.com"
+    description: "Website url."
+steps:
+  # - checkout
+  - run:
+      name: Install Rust
+      command: curl https://sh.rustup.rs -sSf | sh -s -- -y
+  # - run:
+  #     name: Install Rust & Docker
+  #     command: |
+  #       curl https://sh.rustup.rs -sSf | sh -s -- -y
+  #       curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+  #       chmod +x ~/docker-compose
+  #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
+  - run:
+      name: Install A11yWatch
+      command: |
+        cargo install a11ywatch_cli
+  - run:
+      name: Start A11yWatch
+      command: |
+        a11ywatch start
+  - scan:
+      to: << parameters.to >>
+# shell: |
+#   apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#     build-essential openssl curl ca-certificates cargo
+#   curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+#   chmod +x ~/docker-compose
+#   sudo mv ~/docker-compose /usr/local/bin/docker-compose
+#   cargo install a11ywatch_cli
+#   a11ywatch start

@@ -1,0 +1,10 @@
+description: >
+  A11yWatch orb example.
+usage:
+  version: 2.1
+  orbs:
+    a11ywatch: A11yWatch/a11ywatch@1.0.0
+  workflows:
+    use-my-orb:
+      jobs:
+        - a11ywatch/scan

@@ -1,0 +1,13 @@
+description: >
+  This command scans a website for issues using A11yWatch.
+parameters:
+  to:
+    type: string
+    default: "https://a11ywatch.com"
+    description: "Website url"
+steps:
+  - run:
+      environment:
+        PARAM_TO: <<parameters.to>>
+      name: Scan Website
+      command: <<include(scripts/scan.sh)>>
