@@ -1,0 +1,5 @@
+description: >
+  This is a executor using Docker and Ubuntu installing the A11yWatch CLI to start the suite.
+machine:
+  image: ubuntu-2004:current
+  resource_class: large

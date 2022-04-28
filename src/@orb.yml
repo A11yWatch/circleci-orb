@@ -1,0 +1,9 @@
+version: 2.1
+
+description: >
+  A11yWatch suite to get accessibility insights for a website.
+  Figure how to fix your issues fast with a recommendations and other helpful website metrics.
+
+display:
+  home_url: "https://docs.a11ywatch.com"
+  source_url: "https://github.com/A11yWatch/circleci-orb"
